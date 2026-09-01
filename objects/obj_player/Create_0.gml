@@ -66,3 +66,19 @@ wall_jump_power = -9;
 wall_jump_hsp = 14;
 
 instance_create_layer(x,y,"Effects",obj_player_gun);
+
+// Animation sprites (set these to your sprite asset names)
+anim_idle = spr_player_idle;
+anim_run  = spr_player_run;
+anim_jump = spr_player_jump;
+anim_fall = spr_player_fall;
+
+// animation tuning
+run_anim_speed = 1.5;        // multiplier for run animation speed
+idle_anim_speed = 0.12;      // slow breathing idle
+air_anim_speed = 0.0;        // 0 = static frame; set >0 if jump/fall are animated
+
+anim_hsp_threshold = 0.25;   // how much horizontal speed is considered "running"
+
+// track previous sprite so we can reset image_index on change
+_prev_sprite_index = noone;
