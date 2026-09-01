@@ -1,0 +1,1 @@
+move_off_object(3);

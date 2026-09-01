@@ -1,0 +1,1 @@
+bullet_hitdust(20,12);
