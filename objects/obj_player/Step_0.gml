@@ -70,7 +70,7 @@ if hsp != 0 and dust_carryover > 0 {
 	}
 }
 
-sprite_angle = smooth_rotate(hsp * rotation_intensity, rotation_speed, sprite_angle);
+// Removed rotation-based sprite_angle to keep player upright while running
 
 if on_ground {
 	if !landed {
