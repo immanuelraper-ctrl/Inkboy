@@ -17,7 +17,8 @@ if input != 0 {
 }
 
 if input_secondary_pressed and dash_length_timer <= 0 and dash_cooldown_timer <= 0 { 
-	dash_length_timer = dash_length;
+
+dash_length_timer = dash_length;
 	
 	is_dashing = true;
 }
@@ -117,6 +118,44 @@ if (wall_contact && input_jump && !on_ground) {
     }*/
 	
 	bullet_hitdust(24,7);
+}
+
+/// ANIMATION STATE (inserted by Copilot)
+var target_sprite = anim_idle;
+
+// airborne?
+if !on_ground {
+    // moving up = jump, moving down = fall
+    if vsp < 0 {
+        target_sprite = anim_jump;
+    } else {
+        target_sprite = anim_fall;
+    }
+} else {
+    // on ground: running or idle
+    if abs(hsp) > anim_hsp_threshold {
+        target_sprite = anim_run;
+    } else {
+        target_sprite = anim_idle;
+    }
+}
+
+// if the sprite changed, reset image_index so animation starts cleanly
+if sprite_index != target_sprite {
+    sprite_index = target_sprite;
+    image_index = 0;
+}
+
+// set image_speed per animation
+if sprite_index == anim_run {
+    // scale run animation with speed so faster movement speeds up frames
+    var run_speed = (abs(hsp) / max(spd_og, 0.0001)) * run_anim_speed;
+    image_speed = clamp(run_speed, 0.5, 2);
+} else if sprite_index == anim_idle {
+    image_speed = idle_anim_speed;
+} else {
+    // jump/fall: use air_anim_speed (0 for static frame)
+    image_speed = air_anim_speed;
 }
 
 movement_collision();
