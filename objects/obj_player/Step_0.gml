@@ -40,13 +40,13 @@ if is_dashing or dash_afterimage_carryover_timer > 0 {
 	is_invincible = false;
 }
 
-// Check for wall collision to prevent clipping into walls
+// Check for wall collision
 var wall_left = place_meeting(x-1, y, obj_collide);
 var wall_right = place_meeting(x+1, y, obj_collide);
 
-// Block input into walls while airborne
+// Block input into walls, but ONLY when airborne and NOT on ground
 var blocked_input = input;
-if !on_ground {
+if !on_ground and !place_meeting(x, y + 1, obj_collide) {
 	if input < 0 and wall_left {
 		blocked_input = 0;  // Don't allow leftward movement into left wall
 	}
