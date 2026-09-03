@@ -36,55 +36,29 @@ function movement_init() {
 }
 
 function movement_collision() {
-	// First, push player OUT of walls if stuck inside
-	if (place_meeting(x, y, obj_collide)) {
-		var push_distance = 1;
-		var pushed = false;
-		
-		// Try pushing right
-		if (!place_meeting(x + push_distance, y, obj_collide)) {
-			x += push_distance;
-			pushed = true;
-		}
-		// Try pushing left
-		else if (!place_meeting(x - push_distance, y, obj_collide)) {
-			x -= push_distance;
-			pushed = true;
-		}
-		// Try pushing down
-		else if (!place_meeting(x, y + push_distance, obj_collide)) {
-			y += push_distance;
-			pushed = true;
-		}
-		// Try pushing up
-		else if (!place_meeting(x, y - push_distance, obj_collide)) {
-			y -= push_distance;
-			pushed = true;
-		}
-	}
-	
+	// Standard collision with else statements to prevent extra movement
 	var hsp_final = hsp + hsp_carry;
 	var vsp_final = vsp + vsp_carry;
 	
-	// Horizontal collision
-	if (hsp_final != 0 and place_meeting(x + hsp_final, y, obj_collide)) {
+	if (place_meeting(x + hsp_final, y, obj_collide)) {
 		repeat (abs(hsp_final) + 1) {
 			if (place_meeting(x + sign(hsp_final), y, obj_collide))
 				break;
 			x += sign(hsp_final);
 		}
+		hsp_final = 0;
 		hsp = 0;
 	} else {
 		x += hsp_final;
 	}
 
-	// Vertical collision
-	if (vsp_final != 0 and place_meeting(x, y + vsp_final, obj_collide)) {
+	if (place_meeting(x, y + vsp_final, obj_collide)) {
 		repeat (abs(vsp_final) + 1) {
 			if (place_meeting(x, y + sign(vsp_final), obj_collide))
 				break;
 			y += sign(vsp_final);
 		}
+		vsp_final = 0;
 		vsp = 0;
 	} else {
 		y += vsp_final;
