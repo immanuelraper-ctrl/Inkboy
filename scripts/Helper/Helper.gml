@@ -36,31 +36,31 @@ function movement_init() {
 }
 
 function movement_collision() {
-	// modified version of standard collisions that uses 
-	// repeat loops in place of while loops to prevent game hangs
+	// Improved collision that handles jumps better
+	// Only push out if actually moving into the wall
 	
 	var hsp_final = hsp + hsp_carry;
 	var vsp_final = vsp + vsp_carry;
 	
-	if (place_meeting(x + hsp_final, y, obj_collide)) {
+	// Horizontal collision - only push out if moving horizontally
+	if (hsp_final != 0 and place_meeting(x + hsp_final, y, obj_collide)) {
 		repeat (abs(hsp_final) + 1) {
 			if (place_meeting(x + sign(hsp_final), y, obj_collide))
 				break;
 			x += sign(hsp_final);
 		}
-		hsp_final = 0;
 		hsp = 0;
 	} else {
 		x += hsp_final;
 	}
 
-	if (place_meeting(x, y + vsp_final, obj_collide)) {
+	// Vertical collision - only push out if moving vertically
+	if (vsp_final != 0 and place_meeting(x, y + vsp_final, obj_collide)) {
 		repeat (abs(vsp_final) + 1) {
 			if (place_meeting(x, y + sign(vsp_final), obj_collide))
 				break;
 			y += sign(vsp_final);
 		}
-		vsp_final = 0;
 		vsp = 0;
 	} else {
 		y += vsp_final;
