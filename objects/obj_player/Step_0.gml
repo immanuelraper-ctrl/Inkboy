@@ -40,7 +40,22 @@ if is_dashing or dash_afterimage_carryover_timer > 0 {
 	is_invincible = false;
 }
 
-hsp = approach(hsp, input * spd, acc);
+// Check for wall collision to prevent clipping into walls
+var wall_left = place_meeting(x-1, y, obj_collide);
+var wall_right = place_meeting(x+1, y, obj_collide);
+
+// Block input into walls while airborne
+var blocked_input = input;
+if !on_ground {
+	if input < 0 and wall_left {
+		blocked_input = 0;  // Don't allow leftward movement into left wall
+	}
+	if input > 0 and wall_right {
+		blocked_input = 0;  // Don't allow rightward movement into right wall
+	}
+}
+
+hsp = approach(hsp, blocked_input * spd, acc);
 hsp += gunkickx;
 
 vsp = ((vsp + global.world_grv) + gunkicky + vsp_carry) * !is_dashing;
@@ -101,11 +116,11 @@ if current_jumps < max_jumps and input_jump and vsp > 0 {
 var wall_contact = false;
 var wall_direction;
 
-wall_contact = place_meeting(x-1, y, obj_collide) || place_meeting(x+1, y, obj_collide);
+wall_contact = wall_left || wall_right;
 
-if (place_meeting(x-1, y, obj_collide)) {
+if (wall_left) {
     wall_direction = 1;
-} else if (place_meeting(x+1, y, obj_collide)) {
+} else if (wall_right) {
     wall_direction = -1;
 }
 
