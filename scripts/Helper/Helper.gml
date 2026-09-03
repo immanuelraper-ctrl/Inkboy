@@ -36,14 +36,14 @@ function movement_init() {
 }
 
 function movement_collision() {
-	// Improved collision that handles jumps better
-	// Only push out if actually moving into the wall
+	// Collision that skips horizontal pushout when jumping (vsp < 0)
+	// This prevents jitter when jumping near walls
 	
 	var hsp_final = hsp + hsp_carry;
 	var vsp_final = vsp + vsp_carry;
 	
-	// Horizontal collision - only push out if moving horizontally
-	if (hsp_final != 0 and place_meeting(x + hsp_final, y, obj_collide)) {
+	// Horizontal collision - skip if jumping up (vsp < 0)
+	if (hsp_final != 0 and vsp_final >= 0 and place_meeting(x + hsp_final, y, obj_collide)) {
 		repeat (abs(hsp_final) + 1) {
 			if (place_meeting(x + sign(hsp_final), y, obj_collide))
 				break;
@@ -54,7 +54,7 @@ function movement_collision() {
 		x += hsp_final;
 	}
 
-	// Vertical collision - only push out if moving vertically
+	// Vertical collision
 	if (vsp_final != 0 and place_meeting(x, y + vsp_final, obj_collide)) {
 		repeat (abs(vsp_final) + 1) {
 			if (place_meeting(x, y + sign(vsp_final), obj_collide))
