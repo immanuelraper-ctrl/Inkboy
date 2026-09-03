@@ -40,6 +40,8 @@ if is_dashing or dash_afterimage_carryover_timer > 0 {
 	is_invincible = false;
 }
 
+on_ground = place_meeting(x, y + 1, obj_collide);
+
 hsp = approach(hsp, input * spd, acc);
 hsp += gunkickx;
 
@@ -53,8 +55,6 @@ gunkicky = 0;
 
 hsp_carry = 0;
 vsp_carry = 0;
-
-on_ground = place_meeting(x, y + 1, obj_collide);
 
 if hsp != 0 and input != 0 and !input_primary {
 	facing = sign(hsp);
@@ -122,13 +122,13 @@ if (wall_contact && input_jump && !on_ground) {
 	bullet_hitdust(24,7);
 }
 
-// Block input into walls ONLY when falling (vsp > 0) and airborne
-// This prevents clipping when falling into walls, but allows jumping
+// Block movement into walls ONLY when falling and not on ground
+// Don't block when jumping (vsp < 0)
 if !on_ground and vsp > 0 {
-	if input < 0 and wall_left {
+	if input < 0 and wall_left and hsp < 0 {
 		hsp = 0;
 	}
-	if input > 0 and wall_right {
+	if input > 0 and wall_right and hsp > 0 {
 		hsp = 0;
 	}
 }
