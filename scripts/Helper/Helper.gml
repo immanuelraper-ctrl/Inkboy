@@ -36,14 +36,38 @@ function movement_init() {
 }
 
 function movement_collision() {
-	// Collision that skips horizontal pushout when jumping (vsp < 0)
-	// This prevents jitter when jumping near walls
+	// First, push player OUT of walls if stuck inside
+	if (place_meeting(x, y, obj_collide)) {
+		var push_distance = 1;
+		var pushed = false;
+		
+		// Try pushing right
+		if (!place_meeting(x + push_distance, y, obj_collide)) {
+			x += push_distance;
+			pushed = true;
+		}
+		// Try pushing left
+		else if (!place_meeting(x - push_distance, y, obj_collide)) {
+			x -= push_distance;
+			pushed = true;
+		}
+		// Try pushing down
+		else if (!place_meeting(x, y + push_distance, obj_collide)) {
+			y += push_distance;
+			pushed = true;
+		}
+		// Try pushing up
+		else if (!place_meeting(x, y - push_distance, obj_collide)) {
+			y -= push_distance;
+			pushed = true;
+		}
+	}
 	
 	var hsp_final = hsp + hsp_carry;
 	var vsp_final = vsp + vsp_carry;
 	
-	// Horizontal collision - skip if jumping up (vsp < 0)
-	if (hsp_final != 0 and vsp_final >= 0 and place_meeting(x + hsp_final, y, obj_collide)) {
+	// Horizontal collision
+	if (hsp_final != 0 and place_meeting(x + hsp_final, y, obj_collide)) {
 		repeat (abs(hsp_final) + 1) {
 			if (place_meeting(x + sign(hsp_final), y, obj_collide))
 				break;
