@@ -50,9 +50,9 @@ function movement_collision() {
 		}
 		hsp_final = 0;
 		hsp = 0;
+	} else {
+		x += hsp_final;
 	}
-
-	x += hsp_final;
 
 	if (place_meeting(x, y + vsp_final, obj_collide)) {
 		repeat (abs(vsp_final) + 1) {
@@ -62,9 +62,9 @@ function movement_collision() {
 		}
 		vsp_final = 0;
 		vsp = 0;
+	} else {
+		y += vsp_final;
 	}
-
-	y += vsp_final;
 }
 
 function bullet_hitdust(count = 20, dust_offset = 4) {
