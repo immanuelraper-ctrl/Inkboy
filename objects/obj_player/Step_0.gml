@@ -40,22 +40,7 @@ if is_dashing or dash_afterimage_carryover_timer > 0 {
 	is_invincible = false;
 }
 
-// Check for wall collision
-var wall_left = place_meeting(x-1, y, obj_collide);
-var wall_right = place_meeting(x+1, y, obj_collide);
-
-// Block input into walls, but ONLY when airborne and NOT on ground
-var blocked_input = input;
-if !on_ground and !place_meeting(x, y + 1, obj_collide) {
-	if input < 0 and wall_left {
-		blocked_input = 0;  // Don't allow leftward movement into left wall
-	}
-	if input > 0 and wall_right {
-		blocked_input = 0;  // Don't allow rightward movement into right wall
-	}
-}
-
-hsp = approach(hsp, blocked_input * spd, acc);
+hsp = approach(hsp, input * spd, acc);
 hsp += gunkickx;
 
 vsp = ((vsp + global.world_grv) + gunkicky + vsp_carry) * !is_dashing;
@@ -113,6 +98,8 @@ if current_jumps < max_jumps and input_jump and vsp > 0 {
 	}
 }
 
+var wall_left = place_meeting(x-1, y, obj_collide);
+var wall_right = place_meeting(x+1, y, obj_collide);
 var wall_contact = false;
 var wall_direction;
 
@@ -133,6 +120,17 @@ if (wall_contact && input_jump && !on_ground) {
     }*/
 	
 	bullet_hitdust(24,7);
+}
+
+// Block input into walls ONLY when falling (vsp > 0) and airborne
+// This prevents clipping when falling into walls, but allows jumping
+if !on_ground and vsp > 0 {
+	if input < 0 and wall_left {
+		hsp = 0;
+	}
+	if input > 0 and wall_right {
+		hsp = 0;
+	}
 }
 
 /// ANIMATION STATE (inserted by Copilot)
